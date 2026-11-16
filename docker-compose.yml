@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: qayz_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: qayz
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-qayz_prod_password_change_me}
+      POSTGRES_DB: qayz
+    volumes:
+      - qayz_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U qayz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    container_name: qayz_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 4000
+      NODE_ENV: production
+      DATABASE_URL: postgresql://qayz:${POSTGRES_PASSWORD:-qayz_prod_password_change_me}@postgres:5432/qayz
+      JWT_SECRET: ${JWT_SECRET:-replace-with-secure-64-char-secret}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3005}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3005}
+    volumes:
+      - qayz_uploads:/app/uploads
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: qayz_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      PORT: 3005
+      INTERNAL_BACKEND_URL: http://backend:4000
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3005}
+    ports:
+      - "3005:3005"
+
+volumes:
+  qayz_pgdata:
+  qayz_uploads:

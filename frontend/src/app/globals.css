@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* Subtle Traditional Mughal Jaali Lattice Pattern for Design 3 */
+.pattern-jaali {
+  background-image: radial-gradient(circle at 1px 1px, rgba(184, 145, 70, 0.14) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+.pattern-heritage-border {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(184, 145, 70, 0.45) 0px,
+    rgba(184, 145, 70, 0.45) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
