@@ -267,7 +267,7 @@ router.get(
         if (!rows[0]) throw new AppError(404, 'Order not found', 'ORDER_NOT_FOUND');
         orderNumber = rows[0].orderNumber;
       }
-      const data = await getOrderDetailsByNumber(orderNumber);
+      const data = await getOrderDetailsByNumber(orderNumber, undefined, true);
       res.json({ success: true, data });
     } catch (err) {
       next(err);
@@ -318,7 +318,7 @@ router.patch(
         },
       });
 
-      const full = await getOrderDetailsByNumber(result.updated.orderNumber);
+      const full = await getOrderDetailsByNumber(result.updated.orderNumber, undefined, true);
       res.json({ success: true, data: full });
     } catch (err) {
       next(err);
@@ -417,7 +417,7 @@ router.patch(
         newValue: body as unknown as Record<string, unknown>,
       });
 
-      const full = await getOrderDetailsByNumber(order.orderNumber);
+      const full = await getOrderDetailsByNumber(order.orderNumber, undefined, true);
       res.json({ success: true, data: full });
     } catch (err) {
       next(err);

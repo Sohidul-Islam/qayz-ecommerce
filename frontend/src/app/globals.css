@@ -21,12 +21,9 @@
 }
 
 .pattern-heritage-border {
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(184, 145, 70, 0.45) 0px,
-    rgba(184, 145, 70, 0.45) 6px,
-    transparent 6px,
-    transparent 12px
-  );
+  background-image: repeating-linear-gradient(90deg,
+      rgba(184, 145, 70, 0.45) 0px,
+      rgba(184, 145, 70, 0.45) 6px,
+      transparent 6px,
+      transparent 12px);
 }
-

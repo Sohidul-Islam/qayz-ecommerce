@@ -71,6 +71,13 @@ async function getOrCreateCart(token: string) {
       status: 'active',
     })
     .returning();
+
+  await recordAnalyticsEvent({
+    eventType: 'Cart Created',
+    cartId: created.id,
+    pagePath: '/cart',
+  });
+
   return created;
 }
 
@@ -337,6 +344,15 @@ router.patch('/items/:id', async (req: Request, res: Response, next: NextFunctio
       .update(carts)
       .set({ lastActivityAt: new Date(), updatedAt: new Date() })
       .where(eq(carts.id, cart.id));
+
+    await recordAnalyticsEvent({
+      eventType: 'Quantity Changed',
+      productId: item.productId,
+      variantId: item.variantId,
+      cartId: cart.id,
+      pagePath: '/cart',
+      metadata: { previousQuantity: item.quantity, newQuantity: body.quantity },
+    });
 
     const data = await buildCartResponse(cart);
     res.json({ success: true, data });

@@ -534,7 +534,11 @@ export async function createOrder(input: CreateOrderInput) {
   return createdOrder;
 }
 
-export async function getOrderDetailsByNumber(orderNumber: string, phone?: string) {
+export async function getOrderDetailsByNumber(
+  orderNumber: string,
+  phone?: string,
+  isAdmin = false
+) {
   const rows = await db
     .select()
     .from(orders)
@@ -546,11 +550,18 @@ export async function getOrderDetailsByNumber(orderNumber: string, phone?: strin
     throw new AppError(404, `Order ${orderNumber} not found`, 'ORDER_NOT_FOUND');
   }
 
-  // If phone is passed (public tracking verification), ensure it matches
-  if (phone) {
-    const cleanInput = phone.replace(/\s+/g, '').slice(-8);
-    const cleanOrderPhone = order.customerPhone.replace(/\s+/g, '').slice(-8);
-    if (cleanInput !== cleanOrderPhone) {
+  // Enforce customer ownership verification on public order endpoints (Rule 10)
+  if (!isAdmin) {
+    if (!phone || !phone.trim()) {
+      throw new AppError(
+        403,
+        'Phone verification is required to view this order',
+        'ORDER_ACCESS_DENIED'
+      );
+    }
+    const cleanInput = phone.replace(/\D/g, '').slice(-8);
+    const cleanOrderPhone = order.customerPhone.replace(/\D/g, '').slice(-8);
+    if (!cleanInput || cleanInput !== cleanOrderPhone) {
       throw new AppError(403, 'Phone number does not match this order', 'ORDER_ACCESS_DENIED');
     }
   }

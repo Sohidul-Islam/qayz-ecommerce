@@ -20,12 +20,16 @@ export const ALLOWED_ANALYTICS_EVENTS = new Set([
   'Product Viewed',
   'Product Search',
   'Category Viewed',
+  'Cart Created',
   'Add To Cart',
   'Remove From Cart',
+  'Quantity Changed',
   'Cart Viewed',
+  'Cart Abandoned',
   'Checkout Started',
   'Checkout Completed',
   'Purchase Completed',
+  'Buy Now',
   'Wishlist Added',
   'Wishlist Removed',
   'Product Variant Selected',
@@ -443,10 +447,22 @@ export async function getFullAnalyticsReport(days = 30) {
       : 0;
   const totalPageViews = allEvents.filter((e) => e.eventType === 'Page Viewed').length;
 
-  // Device breakdown
+  // Device, Browser, OS, Country, Landing Page, and Referrer breakdowns
   const deviceMap = new Map<string, number>();
+  const browserMap = new Map<string, number>();
+  const osMap = new Map<string, number>();
+  const countryMap = new Map<string, number>();
+  const landingPageMap = new Map<string, number>();
+  const referrerMap = new Map<string, number>();
   for (const s of allSessions) {
     deviceMap.set(s.deviceType, (deviceMap.get(s.deviceType) || 0) + 1);
+    browserMap.set(s.browser, (browserMap.get(s.browser) || 0) + 1);
+    osMap.set(s.os, (osMap.get(s.os) || 0) + 1);
+    countryMap.set(s.country, (countryMap.get(s.country) || 0) + 1);
+    const lp = s.landingPage.split('?')[0] || '/';
+    landingPageMap.set(lp, (landingPageMap.get(lp) || 0) + 1);
+    const refLabel = s.referrer || 'Direct (No Referrer)';
+    referrerMap.set(refLabel, (referrerMap.get(refLabel) || 0) + 1);
   }
 
   // Funnel calculation
@@ -731,6 +747,7 @@ export async function getFullAnalyticsReport(days = 30) {
       ? await db
           .select({
             cartId: cartItems.cartId,
+            productId: cartItems.productId,
             quantity: cartItems.quantity,
             productName: products.name,
             basePrice: products.basePrice,
@@ -741,6 +758,16 @@ export async function getFullAnalyticsReport(days = 30) {
           .innerJoin(products, eq(cartItems.productId, products.id))
           .innerJoin(productVariants, eq(cartItems.variantId, productVariants.id))
       : [];
+
+  const abandonedCountByProduct = new Map<number, number>();
+  for (const ci of cartItemsDetailed) {
+    if (abandonedCartIds.includes(ci.cartId)) {
+      abandonedCountByProduct.set(
+        ci.productId,
+        (abandonedCountByProduct.get(ci.productId) || 0) + ci.quantity
+      );
+    }
+  }
 
   const abandonedCarts = abandonedCartRows
     .map((c) => {
@@ -755,12 +782,62 @@ export async function getFullAnalyticsReport(days = 30) {
     })
     .filter((c) => c.itemsCount > 0);
 
+  // Popular Categories, Highest/Lowest Conversion & Most Abandoned Products
+  const productMetricsWithAbandon = productMetrics.map((pm) => ({
+    ...pm,
+    abandonedCount: abandonedCountByProduct.get(pm.productId) || 0,
+  }));
+
+  const categoryAggMap = new Map<
+    string,
+    { category: string; views: number; addToCarts: number; purchases: number; revenue: number }
+  >();
+  for (const pm of productMetricsWithAbandon) {
+    const cur = categoryAggMap.get(pm.category) || {
+      category: pm.category,
+      views: 0,
+      addToCarts: 0,
+      purchases: 0,
+      revenue: 0,
+    };
+    cur.views += pm.views;
+    cur.addToCarts += pm.addToCarts;
+    cur.purchases += pm.purchases;
+    cur.revenue += pm.revenue;
+    categoryAggMap.set(pm.category, cur);
+  }
+  const popularCategories = Array.from(categoryAggMap.values()).sort(
+    (a, b) => b.views - a.views || b.revenue - a.revenue
+  );
+
+  // Search-to-click & Search-to-order attribution
+  const searchSessionTokens = new Set(
+    searchEvents.map((e) => e.sessionToken).filter((t) => Boolean(t))
+  );
+  const productsClickedAfterSearch = productViewEvents.filter(
+    (e) => e.sessionToken && searchSessionTokens.has(e.sessionToken)
+  ).length;
+  const ordersFromSearch = allOrders.filter(
+    (o) => o.sourceSessionId && searchSessionTokens.has(o.sourceSessionId)
+  ).length;
+
   // Sales & Customer summary
   const validOrders = allOrders.filter((o) => !['Cancelled', 'Refunded'].includes(o.orderStatus));
   const totalRevenue = validOrders.reduce((acc, o) => acc + o.totalAmount, 0);
   const cancelledCount = allOrders.filter((o) => o.orderStatus === 'Cancelled').length;
   const returnedCount = allOrders.filter((o) => o.orderStatus === 'Returned').length;
   const repeatCustomers = allCustomers.filter((c) => c.totalOrders > 1).length;
+  const newCustomersCount = allCustomers.filter((c) => c.totalOrders <= 1).length;
+
+  const acqSourceMap = new Map<string, number>();
+  for (const c of allCustomers) {
+    acqSourceMap.set(c.firstSource, (acqSourceMap.get(c.firstSource) || 0) + 1);
+  }
+
+  const toBreakdown = (m: Map<string, number>) =>
+    Array.from(m.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
 
   return {
     periodDays: days,
@@ -772,6 +849,11 @@ export async function getFullAnalyticsReport(days = 30) {
       totalPageViews,
       avgSessionDurationSeconds: avgSessionDuration,
       devices: Array.from(deviceMap.entries()).map(([device, count]) => ({ device, count })),
+      browsers: toBreakdown(browserMap),
+      operatingSystems: toBreakdown(osMap),
+      countries: toBreakdown(countryMap),
+      landingPages: toBreakdown(landingPageMap).slice(0, 8),
+      referrers: toBreakdown(referrerMap).slice(0, 8),
       trafficSources,
       campaigns: Array.from(campaignMap.values()).sort((a, b) => b.visitors - a.visitors),
     },
@@ -789,24 +871,46 @@ export async function getFullAnalyticsReport(days = 30) {
     },
     customers: {
       totalCustomers: allCustomers.length,
+      newCustomers: newCustomersCount,
+      returningCustomers: repeatCustomers,
       repeatCustomers,
       repeatPurchaseRate:
         allCustomers.length > 0
           ? Number(((repeatCustomers / allCustomers.length) * 100).toFixed(1))
           : 0,
+      acquisitionSources: toBreakdown(acqSourceMap),
     },
     funnel,
     products: {
-      all: productMetrics.sort((a, b) => b.views - a.views),
-      mostViewed: [...productMetrics].sort((a, b) => b.views - a.views).slice(0, 5),
-      mostAddedToCart: [...productMetrics].sort((a, b) => b.addToCarts - a.addToCarts).slice(0, 5),
-      mostPurchased: [...productMetrics].sort((a, b) => b.purchases - a.purchases).slice(0, 5),
+      all: productMetricsWithAbandon.sort((a, b) => b.views - a.views),
+      mostViewed: [...productMetricsWithAbandon].sort((a, b) => b.views - a.views).slice(0, 5),
+      mostAddedToCart: [...productMetricsWithAbandon]
+        .sort((a, b) => b.addToCarts - a.addToCarts)
+        .slice(0, 5),
+      mostPurchased: [...productMetricsWithAbandon]
+        .sort((a, b) => b.purchases - a.purchases)
+        .slice(0, 5),
+      mostAbandonedProducts: [...productMetricsWithAbandon]
+        .filter((p) => p.abandonedCount > 0 || p.removals > 0)
+        .sort((a, b) => b.abandonedCount + b.removals - (a.abandonedCount + a.removals))
+        .slice(0, 5),
+      highestConversionProducts: [...productMetricsWithAbandon]
+        .filter((p) => p.views > 0)
+        .sort((a, b) => b.conversionRate - a.conversionRate)
+        .slice(0, 5),
+      lowestConversionProducts: [...productMetricsWithAbandon]
+        .filter((p) => p.views > 0)
+        .sort((a, b) => a.conversionRate - b.conversionRate)
+        .slice(0, 5),
+      popularCategories,
       highViewsLowPurchases,
       restockRecommendations,
     },
     search: {
       topKeywords: searchInsights.slice(0, 15),
       zeroResultSearches,
+      productsClickedAfterSearch,
+      ordersFromSearch,
     },
     abandonedCarts,
   };
