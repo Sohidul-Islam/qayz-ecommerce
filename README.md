@@ -1,4 +1,4 @@
-# gayz-ecommerce
+# Qayz-ecommerce
 
 QAYZ — Modern, Minimal & Premium South Asian Punjabi/Panjabi E-Commerce Platform featuring **3 switchable homepage designs** (`Luxury Minimal`, `Modern Premium`, and `Traditional + Premium`) backed by a single Express + PostgreSQL/Drizzle REST API, transactional inventory/order consistency, RBAC admin dashboard, and privacy-conscious analytics.
 
