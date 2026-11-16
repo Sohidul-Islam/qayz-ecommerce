@@ -959,7 +959,9 @@ router.get(
         .limit(Math.min(250, Number(limit) || 100));
 
       const filtered =
-        resource && resource !== 'all' ? rows.filter((r) => r.resource === resource) : rows;
+        resource && resource !== 'all'
+          ? rows.filter((r: typeof auditLogs.$inferSelect) => r.resource === resource)
+          : rows;
       res.json({ success: true, data: filtered });
     } catch (err) {
       next(err);
