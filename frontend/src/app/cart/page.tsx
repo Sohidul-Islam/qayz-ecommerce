@@ -171,9 +171,8 @@ export default function CartPage() {
                   </div>
                   {couponStatus && (
                     <p
-                      className={`text-xs ${
-                        couponStatus.type === 'ok' ? 'text-emerald-700' : 'text-rose-600'
-                      }`}
+                      className={`text-xs ${couponStatus.type === 'ok' ? 'text-emerald-700' : 'text-rose-600'
+                        }`}
                     >
                       {couponStatus.msg}
                     </p>

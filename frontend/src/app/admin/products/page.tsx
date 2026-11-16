@@ -389,11 +389,10 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-4 py-3 space-x-1">
                       <span
-                        className={`inline-block px-2 py-0.5 rounded text-[10px] font-medium ${
-                          p.isActive && !p.isArchived
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'bg-neutral-100 text-neutral-600'
-                        }`}
+                        className={`inline-block px-2 py-0.5 rounded text-[10px] font-medium ${p.isActive && !p.isArchived
+                          ? 'bg-emerald-50 text-emerald-700'
+                          : 'bg-neutral-100 text-neutral-600'
+                          }`}
                       >
                         {p.isArchived ? 'Archived' : p.isActive ? 'Active' : 'Disabled'}
                       </span>

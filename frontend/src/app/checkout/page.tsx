@@ -301,11 +301,10 @@ export default function CheckoutPage() {
                   return (
                     <label
                       key={z.id}
-                      className={`flex items-center justify-between p-4 border cursor-pointer transition-colors ${
-                        selected
-                          ? 'border-neutral-900 bg-neutral-50'
-                          : 'border-neutral-200 hover:border-neutral-400'
-                      }`}
+                      className={`flex items-center justify-between p-4 border cursor-pointer transition-colors ${selected
+                        ? 'border-neutral-900 bg-neutral-50'
+                        : 'border-neutral-200 hover:border-neutral-400'
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <input
@@ -366,11 +365,10 @@ export default function CheckoutPage() {
                       key={pm.id}
                       type="button"
                       onClick={() => setPaymentMethod(pm.id)}
-                      className={`p-4 border text-left transition-all ${
-                        selected
-                          ? 'border-neutral-900 bg-neutral-900 text-white'
-                          : 'border-neutral-200 hover:border-neutral-400 bg-white'
-                      }`}
+                      className={`p-4 border text-left transition-all ${selected
+                        ? 'border-neutral-900 bg-neutral-900 text-white'
+                        : 'border-neutral-200 hover:border-neutral-400 bg-white'
+                        }`}
                     >
                       <pm.icon className="w-5 h-5 mb-2" />
                       <p className="text-xs font-semibold uppercase tracking-wider">{pm.label}</p>
