@@ -26,12 +26,41 @@ export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [verifyPhone, setVerifyPhone] = useState('');
+  const [needsPhone, setNeedsPhone] = useState(false);
+
+  const loadOrder = (phoneParam: string) => {
+    setLoading(true);
+    setError('');
+    apiFetch<{ success: boolean; data: OrderDetail }>(
+      `/orders/${orderNumber}?phone=${encodeURIComponent(phoneParam)}`
+    )
+      .then((res) => {
+        setOrder(res.data);
+        setNeedsPhone(false);
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('qayz_order_phone', phoneParam);
+        }
+      })
+      .catch((err) => {
+        setNeedsPhone(true);
+        setError((err as Error).message);
+      })
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
-    apiFetch<{ success: boolean; data: OrderDetail }>(`/orders/${orderNumber}`)
-      .then((res) => setOrder(res.data))
-      .catch((err) => setError((err as Error).message))
-      .finally(() => setLoading(false));
+    if (typeof window === 'undefined') return;
+    const sp = new URLSearchParams(window.location.search);
+    const p = sp.get('phone') || sessionStorage.getItem('qayz_order_phone') || '';
+    if (!p) {
+      setNeedsPhone(true);
+      setLoading(false);
+      return;
+    }
+    setVerifyPhone(p);
+    loadOrder(p);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderNumber]);
 
   const pageBg =
@@ -49,14 +78,42 @@ export default function OrderConfirmationPage() {
     );
   }
 
-  if (error || !order) {
+  if (needsPhone || error || !order) {
     return (
-      <div className="max-w-xl mx-auto px-4 py-24 text-center space-y-4">
-        <h1 className="font-serif text-3xl">Order Not Found</h1>
-        <p className="text-sm text-neutral-600">{error}</p>
-        <Link href="/orders/track" className="inline-block px-6 py-3 bg-neutral-900 text-white text-xs uppercase tracking-widest">
-          Try Tracking Lookup
-        </Link>
+      <div className={`${pageBg} min-h-[70vh] py-20 px-4`}>
+        <div className="max-w-md mx-auto bg-white border border-current/15 p-8 text-center space-y-4">
+          <h1 className="font-serif text-2xl">Verify Order Access</h1>
+          <p className="text-xs text-neutral-600">
+            Enter the phone number used when placing order{' '}
+            <span className="font-mono font-semibold">{orderNumber}</span>.
+          </p>
+          {error && <p className="text-xs text-rose-600 bg-rose-50 p-2.5 border border-rose-200">{error}</p>}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              loadOrder(verifyPhone.trim());
+            }}
+            className="space-y-3"
+          >
+            <input
+              required
+              type="tel"
+              value={verifyPhone}
+              onChange={(e) => setVerifyPhone(e.target.value)}
+              placeholder="e.g. 01711223344"
+              className="w-full px-3.5 py-2.5 text-sm border border-neutral-300 focus:outline-none focus:border-neutral-900"
+            />
+            <button
+              type="submit"
+              className="w-full py-3 bg-neutral-900 text-white text-xs uppercase tracking-widest font-semibold"
+            >
+              View Order Details
+            </button>
+          </form>
+          <Link href="/orders/track" className="inline-block text-xs underline text-neutral-600 pt-1">
+            Back to Order Tracking
+          </Link>
+        </div>
       </div>
     );
   }
@@ -104,9 +161,8 @@ export default function OrderConfirmationPage() {
                   return (
                     <div key={step} className="text-center space-y-1.5">
                       <div
-                        className={`h-1.5 w-full ${
-                          done ? 'bg-emerald-700' : 'bg-neutral-200'
-                        }`}
+                        className={`h-1.5 w-full ${done ? 'bg-emerald-700' : 'bg-neutral-200'
+                          }`}
                       />
                       <p className={`text-[10px] uppercase tracking-wider ${done ? 'font-semibold text-neutral-900' : 'text-neutral-400'}`}>
                         {step}

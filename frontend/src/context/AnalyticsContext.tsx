@@ -6,21 +6,25 @@ import { apiFetch } from '@/lib/api';
 
 export interface TrackEventPayload {
   eventType:
-    | 'Page Viewed'
-    | 'Product Viewed'
-    | 'Product Search'
-    | 'Category Viewed'
-    | 'Add To Cart'
-    | 'Remove From Cart'
-    | 'Cart Viewed'
-    | 'Checkout Started'
-    | 'Checkout Completed'
-    | 'Purchase Completed'
-    | 'Wishlist Added'
-    | 'Wishlist Removed'
-    | 'Product Variant Selected'
-    | 'Size Selected'
-    | 'Color Selected';
+  | 'Page Viewed'
+  | 'Product Viewed'
+  | 'Product Search'
+  | 'Category Viewed'
+  | 'Cart Created'
+  | 'Add To Cart'
+  | 'Remove From Cart'
+  | 'Quantity Changed'
+  | 'Cart Viewed'
+  | 'Cart Abandoned'
+  | 'Checkout Started'
+  | 'Checkout Completed'
+  | 'Purchase Completed'
+  | 'Buy Now'
+  | 'Wishlist Added'
+  | 'Wishlist Removed'
+  | 'Product Variant Selected'
+  | 'Size Selected'
+  | 'Color Selected';
   productId?: number | null;
   variantId?: number | null;
   categoryId?: number | null;

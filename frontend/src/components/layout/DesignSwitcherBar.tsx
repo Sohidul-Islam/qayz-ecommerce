@@ -27,11 +27,10 @@ export function DesignSwitcherBar() {
                 key={d}
                 type="button"
                 onClick={() => setDesign(d)}
-                className={`px-2.5 py-1 rounded-sm transition-all text-[11px] font-medium ${
-                  active
-                    ? 'bg-white text-neutral-950 shadow-sm'
-                    : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800 hover:text-white border border-neutral-800'
-                }`}
+                className={`px-2.5 py-1 rounded-sm transition-all text-[11px] font-medium ${active
+                  ? 'bg-white text-neutral-950 shadow-sm'
+                  : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800 hover:text-white border border-neutral-800'
+                  }`}
               >
                 {DESIGN_META[d].label}
               </button>

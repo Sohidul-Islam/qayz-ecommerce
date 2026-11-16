@@ -213,6 +213,79 @@ export function HomeDesign2({ products, categories }: HomeDesignProps) {
           ))}
         </div>
       </section>
+
+      {/* 8. Verified Customer Reviews */}
+      <section className="bg-slate-50 border-y border-slate-200 py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
+                Customer Reviews
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mt-1">
+                Verified Client Feedback
+              </h2>
+            </div>
+            <p className="text-sm text-slate-500">4.9 / 5 Average Rating Across Bangladesh</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                quote:
+                  'Size L fit right out of the box with zero collar collapse. Delivered to Banani in under 24 hours.',
+                name: 'Zahir Uddin',
+                city: 'Banani, Dhaka',
+              },
+              {
+                quote:
+                  'Breathable Supima cotton that holds a sharp silhouette through an entire Friday schedule and dinner.',
+                name: 'Mehedi Hasan',
+                city: 'Uttara, Dhaka',
+              },
+              {
+                quote:
+                  'Clean checkout, live tracking link worked immediately, and the packaging felt truly luxury.',
+                name: 'Saifullah Khan',
+                city: 'Gulshan 2, Dhaka',
+              },
+            ].map((rev) => (
+              <div key={rev.name} className="bg-white border border-slate-200 rounded-xl p-6 space-y-3">
+                <div className="flex gap-1 text-amber-500">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-sm text-slate-700 leading-relaxed">“{rev.quote}”</p>
+                <p className="text-xs font-semibold text-slate-900">
+                  {rev.name} · <span className="font-normal text-slate-500">{rev.city}</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Delivery Information */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Inside Dhaka Express</p>
+            <p className="text-xl font-bold mt-1">৳80 · 24–48 Hours</p>
+            <p className="text-xs text-slate-500 mt-1">Complimentary delivery on orders over ৳6,500</p>
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Dhaka Suburbs</p>
+            <p className="text-xl font-bold mt-1">৳120 · 2–3 Business Days</p>
+            <p className="text-xs text-slate-500 mt-1">Savar, Gazipur & Narayanganj · Free over ৳7,500</p>
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Nationwide Courier</p>
+            <p className="text-xl font-bold mt-1">৳150 · 3–5 Business Days</p>
+            <p className="text-xs text-slate-500 mt-1">Tracked courier to all 64 districts · Free over ৳8,000</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

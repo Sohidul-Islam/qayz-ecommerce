@@ -116,8 +116,13 @@ export default function CheckoutPage() {
         }),
       });
 
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('qayz_order_phone', customerPhone);
+      }
       await refreshCart();
-      router.push(`/orders/${res.data.order.orderNumber}`);
+      router.push(
+        `/orders/${res.data.order.orderNumber}?phone=${encodeURIComponent(customerPhone)}`
+      );
     } catch (err) {
       setError((err as Error).message || 'Could not place order. Please review your details.');
     } finally {

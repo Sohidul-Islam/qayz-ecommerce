@@ -75,9 +75,8 @@ export function Navbar() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`text-xs uppercase tracking-[0.16em] transition-opacity hover:opacity-65 ${
-                  pathname === l.href ? 'font-semibold underline underline-offset-8' : 'font-medium'
-                }`}
+                className={`text-xs uppercase tracking-[0.16em] transition-opacity hover:opacity-65 ${pathname === l.href ? 'font-semibold underline underline-offset-8' : 'font-medium'
+                  }`}
               >
                 {l.label}
               </Link>

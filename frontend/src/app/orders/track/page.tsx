@@ -26,11 +26,15 @@ export default function TrackOrderPage() {
     setError('');
     setLoading(true);
     try {
-      const qs = phone.trim() ? `?phone=${encodeURIComponent(phone.trim())}` : '';
+      const cleanPhone = phone.trim();
+      const qs = `?phone=${encodeURIComponent(cleanPhone)}`;
       const res = await apiFetch<{ success: boolean; data: OrderDetail }>(
         `/orders/${encodeURIComponent(orderNumber.trim().toUpperCase())}${qs}`
       );
-      router.push(`/orders/${res.data.orderNumber}`);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('qayz_order_phone', cleanPhone);
+      }
+      router.push(`/orders/${res.data.orderNumber}${qs}`);
     } catch (err) {
       setError((err as Error).message || 'Could not locate order. Verify your Order ID and phone.');
     } finally {
@@ -70,9 +74,10 @@ export default function TrackOrderPage() {
 
           <div>
             <label className="block text-xs uppercase tracking-wider font-medium mb-1.5">
-              Phone Number (Verification)
+              Phone Number (Verification) *
             </label>
             <input
+              required
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}

@@ -138,6 +138,15 @@ export default function ProductDetailPage() {
       selectedColor: colorName,
       selectedSize: preferredSize?.size,
     });
+    if (preferredSize) {
+      trackEvent({
+        eventType: 'Product Variant Selected',
+        productId: product.id,
+        variantId: preferredSize.id,
+        selectedColor: colorName,
+        selectedSize: preferredSize.size,
+      });
+    }
   };
 
   const handleSizeSelect = (sizeLabel: string) => {
@@ -151,6 +160,15 @@ export default function ProductDetailPage() {
       selectedColor,
       selectedSize: sizeLabel,
     });
+    if (v) {
+      trackEvent({
+        eventType: 'Product Variant Selected',
+        productId: product.id,
+        variantId: v.id,
+        selectedColor,
+        selectedSize: sizeLabel,
+      });
+    }
   };
 
   const handleAddToCart = async () => {
@@ -172,6 +190,13 @@ export default function ProductDetailPage() {
     setFeedback('');
     try {
       await addToCart(activeVariant.id, quantity, false);
+      trackEvent({
+        eventType: 'Buy Now',
+        productId: product.id,
+        variantId: activeVariant.id,
+        selectedColor,
+        selectedSize,
+      });
       trackEvent({
         eventType: 'Checkout Started',
         productId: product.id,
@@ -201,6 +226,8 @@ export default function ProductDetailPage() {
         ? 'bg-slate-900 hover:bg-slate-800 text-white rounded-lg'
         : 'bg-[#111113] hover:bg-neutral-800 text-white';
 
+  const canonicalUrl = `${typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3005'}/products/${product.slug}`;
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -211,6 +238,7 @@ export default function ProductDetailPage() {
     brand: { '@type': 'Brand', name: 'QAYZ' },
     offers: {
       '@type': 'Offer',
+      url: canonicalUrl,
       priceCurrency: 'BDT',
       price: displayPrice,
       availability:
@@ -220,11 +248,32 @@ export default function ProductDetailPage() {
     },
   };
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: '/' },
+      { '@type': 'ListItem', position: 2, name: 'Collection', item: '/products' },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: product.categoryName,
+        item: `/products?category=${product.categorySlug}`,
+      },
+      { '@type': 'ListItem', position: 4, name: product.name, item: canonicalUrl },
+    ],
+  };
+
   return (
     <div className={`${pageBg} min-h-screen py-8 sm:py-12`}>
+      <link rel="canonical" href={canonicalUrl} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -259,9 +308,8 @@ export default function ProductDetailPage() {
                     key={img.id}
                     type="button"
                     onClick={() => setActiveImage(idx)}
-                    className={`aspect-[3/4] overflow-hidden border-2 transition-all ${
-                      activeImage === idx ? 'border-neutral-900' : 'border-transparent opacity-65 hover:opacity-100'
-                    }`}
+                    className={`aspect-[3/4] overflow-hidden border-2 transition-all ${activeImage === idx ? 'border-neutral-900' : 'border-transparent opacity-65 hover:opacity-100'
+                      }`}
                   >
                     <img src={img.url} alt={img.altText} className="w-full h-full object-cover" />
                   </button>
@@ -325,11 +373,10 @@ export default function ProductDetailPage() {
                       key={c.name}
                       type="button"
                       onClick={() => handleColorSelect(c.name)}
-                      className={`inline-flex items-center gap-2 px-3.5 py-2 text-xs border transition-all ${
-                        selected
-                          ? 'border-neutral-900 bg-white font-semibold shadow-xs'
-                          : 'border-current/25 bg-white/60 hover:border-current'
-                      }`}
+                      className={`inline-flex items-center gap-2 px-3.5 py-2 text-xs border transition-all ${selected
+                        ? 'border-neutral-900 bg-white font-semibold shadow-xs'
+                        : 'border-current/25 bg-white/60 hover:border-current'
+                        }`}
                     >
                       <span
                         className="w-3.5 h-3.5 rounded-full border border-black/25"
@@ -347,13 +394,12 @@ export default function ProductDetailPage() {
               <div className="flex justify-between text-xs">
                 <span className="uppercase tracking-widest font-semibold opacity-75">Size</span>
                 <span
-                  className={`font-medium ${
-                    availableStock <= 0
-                      ? 'text-rose-600'
-                      : availableStock <= (activeVariant?.lowStockThreshold ?? 5)
-                        ? 'text-amber-700'
-                        : 'text-emerald-700'
-                  }`}
+                  className={`font-medium ${availableStock <= 0
+                    ? 'text-rose-600'
+                    : availableStock <= (activeVariant?.lowStockThreshold ?? 5)
+                      ? 'text-amber-700'
+                      : 'text-emerald-700'
+                    }`}
                 >
                   {availableStock <= 0
                     ? 'Out of Stock'
@@ -373,11 +419,10 @@ export default function ProductDetailPage() {
                       type="button"
                       disabled={out}
                       onClick={() => handleSizeSelect(v.size)}
-                      className={`py-2.5 text-xs font-medium border transition-colors ${
-                        selected
-                          ? 'bg-neutral-900 text-white border-neutral-900'
-                          : 'border-current/25 bg-white/75 hover:border-neutral-900'
-                      } disabled:opacity-35 disabled:line-through`}
+                      className={`py-2.5 text-xs font-medium border transition-colors ${selected
+                        ? 'bg-neutral-900 text-white border-neutral-900'
+                        : 'border-current/25 bg-white/75 hover:border-neutral-900'
+                        } disabled:opacity-35 disabled:line-through`}
                     >
                       {v.size}
                     </button>

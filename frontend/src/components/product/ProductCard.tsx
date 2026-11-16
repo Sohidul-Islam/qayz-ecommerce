@@ -79,13 +79,12 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
           )}
           {product.inStock && hasDiscount && (
             <span
-              className={`px-2.5 py-1 text-[10px] uppercase tracking-widest font-medium ${
-                design === '3'
-                  ? 'bg-[#5C1B24] text-[#FAF5EB]'
-                  : design === '2'
-                    ? 'bg-emerald-600 text-white rounded'
-                    : 'bg-[#111113] text-white'
-              }`}
+              className={`px-2.5 py-1 text-[10px] uppercase tracking-widest font-medium ${design === '3'
+                ? 'bg-[#5C1B24] text-[#FAF5EB]'
+                : design === '2'
+                  ? 'bg-emerald-600 text-white rounded'
+                  : 'bg-[#111113] text-white'
+                }`}
             >
               {product.discountType === 'percentage'
                 ? `-${product.discountValue}%`
@@ -172,13 +171,12 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
 
         <Link
           href={`/products/${product.slug}`}
-          className={`block leading-snug hover:underline line-clamp-1 ${
-            design === '1'
-              ? 'font-serif text-base text-[#111113]'
-              : design === '3'
-                ? 'font-serif text-base text-[#241715]'
-                : 'font-sans font-semibold text-sm text-slate-900'
-          }`}
+          className={`block leading-snug hover:underline line-clamp-1 ${design === '1'
+            ? 'font-serif text-base text-[#111113]'
+            : design === '3'
+              ? 'font-serif text-base text-[#241715]'
+              : 'font-sans font-semibold text-sm text-slate-900'
+            }`}
         >
           {product.name}
         </Link>

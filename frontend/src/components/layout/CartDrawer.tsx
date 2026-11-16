@@ -176,9 +176,8 @@ export function CartDrawer() {
             </form>
             {couponMsg && (
               <p
-                className={`text-xs ${
-                  couponMsg.type === 'ok' ? 'text-emerald-700' : 'text-rose-600'
-                }`}
+                className={`text-xs ${couponMsg.type === 'ok' ? 'text-emerald-700' : 'text-rose-600'
+                  }`}
               >
                 {couponMsg.text}
               </p>

@@ -17,6 +17,41 @@ export default function AdminDeliveryPage() {
   const [estimatedDays, setEstimatedDays] = useState('2-3 Business Days');
   const [isActive, setIsActive] = useState(true);
 
+  // Shipment update modal state
+  const [editingOrder, setEditingOrder] = useState<OrderDetail | null>(null);
+  const [delStatus, setDelStatus] = useState('Pending');
+  const [courierPartner, setCourierPartner] = useState('');
+  const [trackingNumber, setTrackingNumber] = useState('');
+  const [estDeliveryDate, setEstDeliveryDate] = useState('');
+  const [deliveryNotes, setDeliveryNotes] = useState('');
+
+  const openShipmentModal = (o: OrderDetail) => {
+    setEditingOrder(o);
+    setDelStatus(o.delivery?.deliveryStatus || o.deliveryStatus);
+    setCourierPartner(o.delivery?.courierPartner || 'QAYZ Express Courier');
+    setTrackingNumber(o.delivery?.trackingNumber || '');
+    setEstDeliveryDate(o.delivery?.estimatedDeliveryDate || '');
+    setDeliveryNotes(o.delivery?.deliveryNotes || '');
+  };
+
+  const handleSaveShipment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingOrder) return;
+    await apiFetch(`/admin/orders/${editingOrder.id}/delivery`, {
+      method: 'PATCH',
+      isAdmin: true,
+      body: JSON.stringify({
+        deliveryStatus: delStatus,
+        courierPartner,
+        trackingNumber,
+        estimatedDeliveryDate: estDeliveryDate,
+        deliveryNotes,
+      }),
+    });
+    setEditingOrder(null);
+    await load();
+  };
+
   const load = async () => {
     const [zRes, oRes] = await Promise.all([
       apiFetch<{ success: boolean; data: DeliveryZone[] }>('/admin/delivery-zones', { isAdmin: true }),
@@ -134,6 +169,7 @@ export default function AdminDeliveryPage() {
                 <th className="px-4 py-3">Tracking #</th>
                 <th className="px-4 py-3">ETA</th>
                 <th className="px-4 py-3">Delivery Status</th>
+                <th className="px-4 py-3 text-right">Manage</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">
@@ -151,6 +187,15 @@ export default function AdminDeliveryPage() {
                     <span className={`px-2 py-0.5 rounded border text-[10px] font-medium ${getStatusBadgeClass(o.deliveryStatus)}`}>
                       {o.deliveryStatus}
                     </span>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <button
+                      type="button"
+                      onClick={() => openShipmentModal(o)}
+                      className="px-2.5 py-1 border border-neutral-300 rounded hover:bg-neutral-100 inline-flex items-center gap-1"
+                    >
+                      <Edit3 className="w-3 h-3" /> Update
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -205,6 +250,49 @@ export default function AdminDeliveryPage() {
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 border rounded">Cancel</button>
                 <button type="submit" className="px-5 py-2 bg-neutral-900 text-white rounded font-medium">Save Zone</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {editingOrder && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="font-bold text-base">Update Shipment · {editingOrder.orderNumber}</h2>
+              <button type="button" onClick={() => setEditingOrder(null)}><X className="w-5 h-5" /></button>
+            </div>
+            <form onSubmit={handleSaveShipment} className="space-y-3 text-xs">
+              <div>
+                <label className="block font-medium mb-1">Delivery Status</label>
+                <select value={delStatus} onChange={(e) => setDelStatus(e.target.value)} className="w-full px-3 py-2 border rounded">
+                  {['Pending', 'Assigned', 'Picked Up', 'In Transit', 'Out for Delivery', 'Delivered', 'Failed', 'Returned'].map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Courier Partner</label>
+                <input value={courierPartner} onChange={(e) => setCourierPartner(e.target.value)} className="w-full px-3 py-2 border rounded" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-medium mb-1">Tracking Number</label>
+                  <input value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} className="w-full px-3 py-2 border rounded font-mono" />
+                </div>
+                <div>
+                  <label className="block font-medium mb-1">Estimated Delivery Date</label>
+                  <input value={estDeliveryDate} onChange={(e) => setEstDeliveryDate(e.target.value)} className="w-full px-3 py-2 border rounded" />
+                </div>
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Delivery Notes</label>
+                <textarea rows={2} value={deliveryNotes} onChange={(e) => setDeliveryNotes(e.target.value)} className="w-full px-3 py-2 border rounded" />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" onClick={() => setEditingOrder(null)} className="px-4 py-2 border rounded">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-neutral-900 text-white rounded font-medium">Save Shipment</button>
               </div>
             </form>
           </div>

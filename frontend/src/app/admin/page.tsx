@@ -89,6 +89,7 @@ export default function AdminDashboardPage() {
 
   const { kpis, charts, alerts, recentOrders } = data;
   const maxDailyRev = Math.max(1, ...charts.salesOverTime.map((d) => d.revenue));
+  const maxDailyOrders = Math.max(1, ...charts.salesOverTime.map((d) => d.orders));
   const maxCatRev = Math.max(1, ...charts.categoryPerformance.map((c) => c.revenue));
 
   return (
@@ -182,24 +183,22 @@ export default function AdminDashboardPage() {
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Sales Over Time Chart */}
-        <div className="lg:col-span-7 bg-white border border-neutral-200 rounded-lg p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-semibold">Sales & Order Velocity (Last 14 Days)</h2>
-              <p className="text-xs text-neutral-500">Daily gross revenue excluding cancelled/refunded orders</p>
-            </div>
+        {/* Sales / Revenue Over Time Chart */}
+        <div className="lg:col-span-4 bg-white border border-neutral-200 rounded-lg p-5 space-y-4">
+          <div>
+            <h2 className="text-sm font-semibold">Sales & Revenue Over Time (14d)</h2>
+            <p className="text-xs text-neutral-500">Daily gross revenue (BDT)</p>
           </div>
 
-          <div className="h-52 flex items-end gap-2 pt-4">
+          <div className="h-48 flex items-end gap-1.5 pt-4">
             {charts.salesOverTime.map((pt) => {
               const heightPct = Math.max(4, Math.round((pt.revenue / maxDailyRev) * 100));
               return (
                 <div key={pt.date} className="flex-1 flex flex-col items-center gap-1.5 group relative">
-                  <div className="opacity-0 group-hover:opacity-100 absolute -top-9 bg-neutral-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">
-                    {pt.date}: {formatBDT(pt.revenue)} ({pt.orders} orders)
+                  <div className="opacity-0 group-hover:opacity-100 absolute -top-8 bg-neutral-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">
+                    {pt.date}: {formatBDT(pt.revenue)}
                   </div>
-                  <div className="w-full bg-neutral-100 rounded-t h-40 flex items-end overflow-hidden">
+                  <div className="w-full bg-neutral-100 rounded-t h-36 flex items-end overflow-hidden">
                     <div
                       className="w-full bg-neutral-900 group-hover:bg-amber-600 transition-colors rounded-t"
                       style={{ height: `${heightPct}%` }}
@@ -214,8 +213,38 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
+        {/* Orders Over Time Chart */}
+        <div className="lg:col-span-4 bg-white border border-neutral-200 rounded-lg p-5 space-y-4">
+          <div>
+            <h2 className="text-sm font-semibold">Orders Over Time (14d)</h2>
+            <p className="text-xs text-neutral-500">Daily order volume across all statuses</p>
+          </div>
+
+          <div className="h-48 flex items-end gap-1.5 pt-4">
+            {charts.salesOverTime.map((pt) => {
+              const heightPct = pt.orders > 0 ? Math.max(10, Math.round((pt.orders / maxDailyOrders) * 100)) : 3;
+              return (
+                <div key={`${pt.date}-ord`} className="flex-1 flex flex-col items-center gap-1.5 group relative">
+                  <div className="opacity-0 group-hover:opacity-100 absolute -top-8 bg-neutral-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">
+                    {pt.date}: {pt.orders} order(s)
+                  </div>
+                  <div className="w-full bg-sky-50 rounded-t h-36 flex items-end overflow-hidden">
+                    <div
+                      className="w-full bg-sky-700 group-hover:bg-sky-500 transition-colors rounded-t"
+                      style={{ height: `${heightPct}%` }}
+                    />
+                  </div>
+                  <span className="text-[10px] text-neutral-400">
+                    {pt.date.slice(8)}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Category Performance */}
-        <div className="lg:col-span-5 bg-white border border-neutral-200 rounded-lg p-5 space-y-4">
+        <div className="lg:col-span-4 bg-white border border-neutral-200 rounded-lg p-5 space-y-4">
           <h2 className="text-sm font-semibold">Category Performance</h2>
           <div className="space-y-3.5">
             {charts.categoryPerformance.map((cat) => (

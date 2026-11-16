@@ -23,6 +23,11 @@ interface AnalyticsReport {
     totalPageViews: number;
     avgSessionDurationSeconds: number;
     devices: Array<{ device: string; count: number }>;
+    browsers: Array<{ name: string; count: number }>;
+    operatingSystems: Array<{ name: string; count: number }>;
+    countries: Array<{ name: string; count: number }>;
+    landingPages: Array<{ name: string; count: number }>;
+    referrers: Array<{ name: string; count: number }>;
     trafficSources: Array<{
       source: string;
       visitors: number;
@@ -46,8 +51,11 @@ interface AnalyticsReport {
   };
   customers: {
     totalCustomers: number;
+    newCustomers: number;
+    returningCustomers: number;
     repeatCustomers: number;
     repeatPurchaseRate: number;
+    acquisitionSources: Array<{ name: string; count: number }>;
   };
   funnel: Array<{
     step: string;
@@ -80,6 +88,33 @@ interface AnalyticsReport {
       purchases: number;
       conversionRate: number;
     }>;
+    mostAbandonedProducts: Array<{
+      productId: number;
+      name: string;
+      abandonedCount: number;
+      removals: number;
+    }>;
+    highestConversionProducts: Array<{
+      productId: number;
+      name: string;
+      views: number;
+      purchases: number;
+      conversionRate: number;
+    }>;
+    lowestConversionProducts: Array<{
+      productId: number;
+      name: string;
+      views: number;
+      purchases: number;
+      conversionRate: number;
+    }>;
+    popularCategories: Array<{
+      category: string;
+      views: number;
+      addToCarts: number;
+      purchases: number;
+      revenue: number;
+    }>;
     restockRecommendations: Array<{
       productId: number;
       name: string;
@@ -94,6 +129,8 @@ interface AnalyticsReport {
   search: {
     topKeywords: Array<{ query: string; count: number; zeroResultsCount: number }>;
     zeroResultSearches: Array<{ query: string; count: number; zeroResultsCount: number }>;
+    productsClickedAfterSearch: number;
+    ordersFromSearch: number;
   };
 }
 
@@ -377,9 +414,14 @@ export default function AdminAnalyticsPage() {
       {/* Search Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white border border-neutral-200 rounded-lg p-5 space-y-3">
-          <h2 className="text-sm font-semibold flex items-center gap-1.5">
-            <Search className="w-4 h-4" /> Top Customer Search Keywords
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold flex items-center gap-1.5">
+              <Search className="w-4 h-4" /> Top Customer Search Keywords
+            </h2>
+            <span className="text-[11px] text-neutral-500">
+              {report.search.productsClickedAfterSearch} views · {report.search.ordersFromSearch} orders from search
+            </span>
+          </div>
           <div className="divide-y divide-neutral-100 text-xs">
             {report.search.topKeywords.map((sk) => (
               <div key={sk.query} className="py-2 flex justify-between items-center">
@@ -406,6 +448,63 @@ export default function AdminAnalyticsPage() {
                 </span>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Category Popularity, Abandoned Products & Environment Breakdowns */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="bg-white border border-neutral-200 rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold">Most Popular Categories</h2>
+          <div className="divide-y divide-neutral-100 text-xs">
+            {report.products.popularCategories.map((c) => (
+              <div key={c.category} className="py-2 flex justify-between items-center gap-2">
+                <span className="font-medium truncate">{c.category}</span>
+                <span className="text-neutral-600 shrink-0">
+                  {c.views} views · {c.purchases} sold
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white border border-neutral-200 rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold">Most Abandoned & Removed Products</h2>
+          <div className="divide-y divide-neutral-100 text-xs">
+            {report.products.mostAbandonedProducts.map((p) => (
+              <div key={p.productId} className="py-2 flex justify-between items-center gap-2">
+                <span className="font-medium truncate">{p.name}</span>
+                <span className="text-amber-700 font-semibold shrink-0">
+                  {p.abandonedCount} in abandoned · {p.removals} removed
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white border border-neutral-200 rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold">Browsers, OS, Regions & Acquisition</h2>
+          <div className="space-y-2 text-xs">
+            <p className="text-neutral-600">
+              <b>Browsers:</b>{' '}
+              {report.traffic.browsers.map((b) => `${b.name} (${b.count})`).join(', ')}
+            </p>
+            <p className="text-neutral-600">
+              <b>OS:</b>{' '}
+              {report.traffic.operatingSystems.map((o) => `${o.name} (${o.count})`).join(', ')}
+            </p>
+            <p className="text-neutral-600">
+              <b>Regions:</b>{' '}
+              {report.traffic.countries.map((c) => `${c.name} (${c.count})`).join(', ')}
+            </p>
+            <p className="text-neutral-600">
+              <b>Top Landing Pages:</b>{' '}
+              {report.traffic.landingPages.slice(0, 4).map((l) => `${l.name} (${l.count})`).join(', ')}
+            </p>
+            <p className="text-neutral-600">
+              <b>Customer Sources:</b>{' '}
+              {report.customers.acquisitionSources.map((a) => `${a.name} (${a.count})`).join(', ')}
+            </p>
           </div>
         </div>
       </div>

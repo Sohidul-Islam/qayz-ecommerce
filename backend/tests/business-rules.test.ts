@@ -197,5 +197,35 @@ describe('QAYZ Backend Business Rules, Security & Inventory Consistency', () => 
     const detailRes = await request(app).get(`/api/products/${archivedProductId}`);
     expect(detailRes.status).toBe(404);
   });
+
+  it('enforces Rule 10: public order lookup requires matching customer phone verification', async () => {
+    const createRes = await request(app)
+      .post('/api/orders')
+      .send({
+        customerName: 'Owner Only',
+        customerPhone: '01788776655',
+        deliveryAddress: 'Road 5, Banani',
+        city: 'Dhaka',
+        area: 'Banani',
+        paymentMethod: 'cod',
+        items: [{ variantId: testVariantId, quantity: 1 }],
+      });
+    expect(createRes.status).toBe(201);
+    const orderNumber = createRes.body.data.order.orderNumber;
+
+    // Missing phone -> 403
+    const noPhone = await request(app).get(`/api/orders/${orderNumber}`);
+    expect(noPhone.status).toBe(403);
+
+    // Wrong phone -> 403
+    const wrongPhone = await request(app).get(`/api/orders/${orderNumber}?phone=01900000000`);
+    expect(wrongPhone.status).toBe(403);
+
+    // Matching phone -> 200 without internalNotes exposed
+    const ok = await request(app).get(`/api/orders/${orderNumber}?phone=01788776655`);
+    expect(ok.status).toBe(200);
+    expect(ok.body.data.orderNumber).toBe(orderNumber);
+    expect(ok.body.data.internalNotes).toBeUndefined();
+  });
 });
 

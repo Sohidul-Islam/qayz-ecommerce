@@ -190,7 +190,49 @@ export function HomeDesign3({ products, categories }: HomeDesignProps) {
         </div>
       </section>
 
-      {/* 6. Heritage Craft Story + Why Choose Us + Reviews */}
+      {/* 6. Heritage Brand & Craft Story */}
+      <section className="border-t border-[#E2D4B7] bg-[#F4ECDC] py-16 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-5">
+            <div className="aspect-[3/4] rounded-t-[100px] overflow-hidden border-2 border-[#B89146]/40 p-1.5 bg-[#FFFDF8]">
+              <img
+                src="/images/products/punjabi-aarav-ivory.png"
+                alt="Handwoven Narayanganj Jamdani Panjabi Craft"
+                className="w-full h-full object-cover rounded-t-[92px]"
+              />
+            </div>
+          </div>
+          <div className="lg:col-span-7 space-y-5">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-[#8B2635] font-semibold">
+              Our Heritage Story
+            </p>
+            <h2 className="font-serif text-3xl sm:text-4xl leading-tight">
+              Centuries of Bengal Loom Mastery, Tailored Without Clutter.
+            </h2>
+            <p className="text-[#54403B] leading-relaxed">
+              Every QAYZ creation honors South Asian weaving lineages—from hand-loomed Dhaka Jamdani
+              and textured Bogura Tussar silk to subtle Lucknowi shadow chikankari. We avoid loud
+              ornamentation so the richness of genuine fabric and crisp tailoring speaks first.
+            </p>
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[#DFD1B4] text-xs">
+              <div>
+                <p className="font-serif text-lg text-[#5C1B24]">Inside Dhaka</p>
+                <p className="text-[#54403B]">৳80 · 24–48 Hours</p>
+              </div>
+              <div>
+                <p className="font-serif text-lg text-[#5C1B24]">Dhaka Suburbs</p>
+                <p className="text-[#54403B]">৳120 · 2–3 Days</p>
+              </div>
+              <div>
+                <p className="font-serif text-lg text-[#5C1B24]">Nationwide</p>
+                <p className="text-[#54403B]">৳150 · 3–5 Days</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Why Choose Us + Reviews + Delivery Guarantee */}
       <section className="bg-[#FFFDF8] border-t border-[#E2D4B7] py-16 sm:py-20 pattern-jaali">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
