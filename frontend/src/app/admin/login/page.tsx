@@ -122,11 +122,10 @@ export default function AdminLoginPage() {
                   setEmail(r.email);
                   setPassword('Admin@12345!');
                 }}
-                className={`px-2.5 py-1.5 text-left text-[11px] border transition-colors ${
-                  email === r.email
-                    ? 'border-amber-400 bg-amber-400/10 text-amber-200'
-                    : 'border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-600'
-                }`}
+                className={`px-2.5 py-1.5 text-left text-[11px] border transition-colors ${email === r.email
+                  ? 'border-amber-400 bg-amber-400/10 text-amber-200'
+                  : 'border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-600'
+                  }`}
               >
                 {r.label}
               </button>

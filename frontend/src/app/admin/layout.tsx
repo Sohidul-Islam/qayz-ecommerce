@@ -132,9 +132,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Sidebar */}
         <aside
-          className={`${
-            mobileMenuOpen ? 'block' : 'hidden'
-          } lg:flex lg:w-64 lg:flex-col lg:shrink-0 bg-[#111113] text-neutral-200 border-r border-neutral-800`}
+          className={`${mobileMenuOpen ? 'block' : 'hidden'
+            } lg:flex lg:w-64 lg:flex-col lg:shrink-0 bg-[#111113] text-neutral-200 border-r border-neutral-800`}
         >
           <div className="p-5 border-b border-neutral-800 hidden lg:block">
             <Link href="/admin" className="font-serif text-xl tracking-[0.25em] uppercase text-white block">
@@ -159,11 +158,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 text-xs font-medium rounded transition-colors ${
-                    active
-                      ? 'bg-white text-neutral-950'
-                      : 'text-neutral-300 hover:bg-neutral-800/80 hover:text-white'
-                  }`}
+                  className={`flex items-center gap-3 px-3 py-2.5 text-xs font-medium rounded transition-colors ${active
+                    ? 'bg-white text-neutral-950'
+                    : 'text-neutral-300 hover:bg-neutral-800/80 hover:text-white'
+                    }`}
                 >
                   <item.icon className="w-4 h-4 shrink-0" />
                   <span>{item.label}</span>
