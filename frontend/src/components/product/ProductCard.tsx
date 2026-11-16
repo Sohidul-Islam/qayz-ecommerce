@@ -198,3 +198,4 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
     </article>
   );
 }
+

@@ -122,3 +122,4 @@ Enable HTTPS via Certbot: `sudo certbot --nginx -d shop.yourdomain.com`.
 - **Inventory Manager:** `inventory@qayz.com` / `Admin@12345!`
 - **Content Manager:** `content@qayz.com` / `Admin@12345!`
 - **Analytics Viewer:** `analytics@qayz.com` / `Admin@12345!`
+

@@ -135,11 +135,10 @@ export default function AdminInventoryPage() {
               key={f}
               type="button"
               onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 text-xs rounded border ${
-                filter === f
-                  ? 'bg-neutral-900 text-white border-neutral-900'
-                  : 'bg-white border-neutral-300 text-neutral-700'
-              }`}
+              className={`px-3 py-1.5 text-xs rounded border ${filter === f
+                ? 'bg-neutral-900 text-white border-neutral-900'
+                : 'bg-white border-neutral-300 text-neutral-700'
+                }`}
             >
               {f === 'all' ? 'All SKUs' : f === 'low_stock' ? 'Low Stock' : 'Out of Stock'}
             </button>
@@ -192,13 +191,12 @@ export default function AdminInventoryPage() {
                       <td className="px-4 py-3 text-right text-neutral-600">{r.soldQuantity}</td>
                       <td className="px-4 py-3">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
-                            isOut
-                              ? 'bg-rose-50 text-rose-700 border-rose-200'
-                              : isLow
-                                ? 'bg-amber-50 text-amber-800 border-amber-200'
-                                : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          }`}
+                          className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${isOut
+                            ? 'bg-rose-50 text-rose-700 border-rose-200'
+                            : isLow
+                              ? 'bg-amber-50 text-amber-800 border-amber-200'
+                              : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            }`}
                         >
                           {isOut ? 'Out of Stock' : isLow ? 'Low Stock' : 'Healthy'}
                         </span>
@@ -335,9 +333,8 @@ export default function AdminInventoryPage() {
                       <td className="py-2 px-3 text-neutral-500">{formatDateTime(tx.createdAt)}</td>
                       <td className="py-2 px-3 font-medium">{tx.reason}</td>
                       <td
-                        className={`py-2 px-3 text-right font-bold ${
-                          tx.changeAmount > 0 ? 'text-emerald-700' : 'text-rose-600'
-                        }`}
+                        className={`py-2 px-3 text-right font-bold ${tx.changeAmount > 0 ? 'text-emerald-700' : 'text-rose-600'
+                          }`}
                       >
                         {tx.changeAmount > 0 ? `+${tx.changeAmount}` : tx.changeAmount}
                       </td>
@@ -356,3 +353,4 @@ export default function AdminInventoryPage() {
     </div>
   );
 }
+

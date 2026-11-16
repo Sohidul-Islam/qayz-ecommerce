@@ -1,13 +1,22 @@
+# Dependencies
 node_modules/
-*/node_modules/
-frontend/.next/
-frontend/out/
-backend/dist/
-backend/data/
-backend/uploads/*
-!backend/uploads/.gitkeep
+**/node_modules/
+
+# Build outputs
+.next/
+**/.next/
+dist/
+**/dist/
+*.tsbuildinfo
+
+# Local secrets & runtime state
 backend/.env
-frontend/.env.local
+.env.local
+**/.env.local
+backend/data/
+backend/uploads/
+
+# Logs & OS files
 *.log
 .DS_Store
 Thumbs.db

@@ -25,3 +25,4 @@ export const env = {
   maxUploadSizeBytes: Number(process.env.MAX_UPLOAD_SIZE_MB || 5) * 1024 * 1024,
   isProduction: process.env.NODE_ENV === 'production',
 };
+

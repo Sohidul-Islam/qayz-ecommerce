@@ -163,13 +163,12 @@ export default function AdminUsersRolesPage() {
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
-                          locked
-                            ? 'bg-rose-50 text-rose-700'
-                            : u.isActive
-                              ? 'bg-emerald-50 text-emerald-700'
-                              : 'bg-neutral-100 text-neutral-500'
-                        }`}
+                        className={`px-2 py-0.5 rounded text-[10px] font-semibold ${locked
+                          ? 'bg-rose-50 text-rose-700'
+                          : u.isActive
+                            ? 'bg-emerald-50 text-emerald-700'
+                            : 'bg-neutral-100 text-neutral-500'
+                          }`}
                       >
                         {locked ? 'Locked (Brute-force)' : u.isActive ? 'Active' : 'Disabled'}
                       </span>
@@ -291,3 +290,4 @@ export default function AdminUsersRolesPage() {
     </div>
   );
 }
+

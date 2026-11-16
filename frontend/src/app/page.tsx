@@ -42,3 +42,4 @@ export default function HomePage() {
   }
   return <HomeDesign1 products={products} categories={categories} />;
 }
+

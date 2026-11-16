@@ -422,3 +422,4 @@ if (process.argv[1]?.includes('migrate')) {
       process.exit(1);
     });
 }
+

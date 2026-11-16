@@ -573,3 +573,4 @@ export const notificationLogs = pgTable('notification_logs', {
   status: text('status').notNull().default('queued'), // 'queued' | 'sent' | 'failed'
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+

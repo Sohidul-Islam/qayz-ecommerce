@@ -142,3 +142,4 @@ export function useAnalytics() {
   if (!ctx) throw new Error('useAnalytics must be used within AnalyticsProvider');
   return ctx;
 }
+

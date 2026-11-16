@@ -62,18 +62,16 @@ export default function AdminCustomersPage() {
           <button
             type="button"
             onClick={() => setTab('customers')}
-            className={`px-4 py-2 text-xs font-medium rounded border inline-flex items-center gap-1.5 ${
-              tab === 'customers' ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white border-neutral-300'
-            }`}
+            className={`px-4 py-2 text-xs font-medium rounded border inline-flex items-center gap-1.5 ${tab === 'customers' ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white border-neutral-300'
+              }`}
           >
             <Users className="w-3.5 h-3.5" /> Customers ({customers.length})
           </button>
           <button
             type="button"
             onClick={() => setTab('abandoned')}
-            className={`px-4 py-2 text-xs font-medium rounded border inline-flex items-center gap-1.5 ${
-              tab === 'abandoned' ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white border-neutral-300'
-            }`}
+            className={`px-4 py-2 text-xs font-medium rounded border inline-flex items-center gap-1.5 ${tab === 'abandoned' ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white border-neutral-300'
+              }`}
           >
             <ShoppingCart className="w-3.5 h-3.5" /> Abandoned Carts ({abandonedCarts.length})
           </button>
@@ -147,11 +145,10 @@ export default function AdminCustomersPage() {
                     <td className="px-4 py-3 text-right font-bold">{formatBDT(ac.cartValue)}</td>
                     <td className="px-4 py-3">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
-                          ac.checkoutStarted
-                            ? 'bg-amber-50 text-amber-800 border border-amber-200'
-                            : 'bg-neutral-100 text-neutral-600'
-                        }`}
+                        className={`px-2 py-0.5 rounded text-[10px] font-semibold ${ac.checkoutStarted
+                          ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                          : 'bg-neutral-100 text-neutral-600'
+                          }`}
                       >
                         {ac.checkoutStarted ? 'Checkout Started' : 'Cart Stage'}
                       </span>
@@ -177,3 +174,4 @@ export default function AdminCustomersPage() {
     </div>
   );
 }
+

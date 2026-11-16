@@ -30,3 +30,4 @@ export async function recordAuditLog(params: RecordAuditParams): Promise<void> {
     userAgent: params.req ? String(params.req.headers['user-agent'] || '').slice(0, 300) : '',
   });
 }
+

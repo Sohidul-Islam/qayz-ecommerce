@@ -218,9 +218,8 @@ export default function AdminSettingsPage() {
                 <button
                   type="button"
                   onClick={() => toggleCoupon(c)}
-                  className={`px-2.5 py-1 rounded border text-[11px] font-medium ${
-                    c.isActive ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-neutral-100 text-neutral-500'
-                  }`}
+                  className={`px-2.5 py-1 rounded border text-[11px] font-medium ${c.isActive ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-neutral-100 text-neutral-500'
+                    }`}
                 >
                   {c.isActive ? 'Active' : 'Paused'}
                 </button>
@@ -255,3 +254,4 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
+

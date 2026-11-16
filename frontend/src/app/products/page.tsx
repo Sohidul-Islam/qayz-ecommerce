@@ -204,9 +204,8 @@ export default function ProductsListingPage() {
         <div className="pt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Sidebar Filters */}
           <aside
-            className={`lg:col-span-3 space-y-7 ${
-              mobileFiltersOpen ? 'block' : 'hidden lg:block'
-            }`}
+            className={`lg:col-span-3 space-y-7 ${mobileFiltersOpen ? 'block' : 'hidden lg:block'
+              }`}
           >
             <div className="flex items-center justify-between">
               <h2 className="text-xs uppercase tracking-[0.2em] font-semibold">Refine</h2>
@@ -226,9 +225,8 @@ export default function ProductsListingPage() {
                 <button
                   type="button"
                   onClick={() => handleCategoryChange('all')}
-                  className={`block w-full text-left py-1 ${
-                    category === 'all' ? 'font-semibold underline underline-offset-4' : 'opacity-75 hover:opacity-100'
-                  }`}
+                  className={`block w-full text-left py-1 ${category === 'all' ? 'font-semibold underline underline-offset-4' : 'opacity-75 hover:opacity-100'
+                    }`}
                 >
                   All Collections
                 </button>
@@ -237,11 +235,10 @@ export default function ProductsListingPage() {
                     key={c.id}
                     type="button"
                     onClick={() => handleCategoryChange(c.slug)}
-                    className={`block w-full text-left py-1 ${
-                      category === c.slug
-                        ? 'font-semibold underline underline-offset-4'
-                        : 'opacity-75 hover:opacity-100'
-                    }`}
+                    className={`block w-full text-left py-1 ${category === c.slug
+                      ? 'font-semibold underline underline-offset-4'
+                      : 'opacity-75 hover:opacity-100'
+                      }`}
                   >
                     {c.name}
                   </button>
@@ -259,11 +256,10 @@ export default function ProductsListingPage() {
                     setSize('all');
                     setPage(1);
                   }}
-                  className={`px-3 py-1 text-xs border ${
-                    size === 'all'
-                      ? 'bg-neutral-900 text-white border-neutral-900'
-                      : 'border-current/25 bg-white/60'
-                  }`}
+                  className={`px-3 py-1 text-xs border ${size === 'all'
+                    ? 'bg-neutral-900 text-white border-neutral-900'
+                    : 'border-current/25 bg-white/60'
+                    }`}
                 >
                   All
                 </button>
@@ -275,11 +271,10 @@ export default function ProductsListingPage() {
                       setSize(s);
                       setPage(1);
                     }}
-                    className={`px-3 py-1 text-xs border ${
-                      size === s
-                        ? 'bg-neutral-900 text-white border-neutral-900'
-                        : 'border-current/25 bg-white/60'
-                    }`}
+                    className={`px-3 py-1 text-xs border ${size === s
+                      ? 'bg-neutral-900 text-white border-neutral-900'
+                      : 'border-current/25 bg-white/60'
+                      }`}
                   >
                     {s}
                   </button>
@@ -297,11 +292,10 @@ export default function ProductsListingPage() {
                     setColor('all');
                     setPage(1);
                   }}
-                  className={`px-2.5 py-1 text-xs border ${
-                    color === 'all'
-                      ? 'bg-neutral-900 text-white border-neutral-900'
-                      : 'border-current/25 bg-white/60'
-                  }`}
+                  className={`px-2.5 py-1 text-xs border ${color === 'all'
+                    ? 'bg-neutral-900 text-white border-neutral-900'
+                    : 'border-current/25 bg-white/60'
+                    }`}
                 >
                   All
                 </button>
@@ -313,11 +307,10 @@ export default function ProductsListingPage() {
                       setColor(c.name);
                       setPage(1);
                     }}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border ${
-                      color === c.name
-                        ? 'bg-neutral-900 text-white border-neutral-900'
-                        : 'border-current/25 bg-white/60'
-                    }`}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border ${color === c.name
+                      ? 'bg-neutral-900 text-white border-neutral-900'
+                      : 'border-current/25 bg-white/60'
+                      }`}
                   >
                     <span
                       className="w-2.5 h-2.5 rounded-full border border-black/20"
@@ -487,11 +480,10 @@ export default function ProductsListingPage() {
                         type="button"
                         disabled={v.availableStock <= 0}
                         onClick={() => setQvVariantId(v.id)}
-                        className={`px-2.5 py-1.5 text-xs border transition-colors ${
-                          qvVariantId === v.id
-                            ? 'bg-neutral-900 text-white border-neutral-900'
-                            : 'border-neutral-300 hover:border-neutral-900'
-                        } disabled:opacity-35 disabled:line-through`}
+                        className={`px-2.5 py-1.5 text-xs border transition-colors ${qvVariantId === v.id
+                          ? 'bg-neutral-900 text-white border-neutral-900'
+                          : 'border-neutral-300 hover:border-neutral-900'
+                          } disabled:opacity-35 disabled:line-through`}
                       >
                         {v.color} / {v.size}
                       </button>
@@ -527,3 +519,4 @@ export default function ProductsListingPage() {
     </div>
   );
 }
+

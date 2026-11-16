@@ -74,3 +74,4 @@ export function verifyImageMagicBytes(filePath: string): boolean {
     return false;
   }
 }
+

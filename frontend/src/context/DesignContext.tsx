@@ -110,3 +110,4 @@ export function useDesign() {
   if (!ctx) throw new Error('useDesign must be used within DesignProvider');
   return ctx;
 }
+

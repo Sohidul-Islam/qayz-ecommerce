@@ -107,9 +107,8 @@ export default function AdminCategoriesPage() {
               <div className="flex items-center justify-between gap-2">
                 <h3 className="font-semibold text-sm truncate">{cat.name}</h3>
                 <span
-                  className={`px-2 py-0.5 text-[10px] rounded ${
-                    cat.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-neutral-100 text-neutral-600'
-                  }`}
+                  className={`px-2 py-0.5 text-[10px] rounded ${cat.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-neutral-100 text-neutral-600'
+                    }`}
                 >
                   {cat.isActive ? 'Active' : 'Hidden'}
                 </span>
@@ -195,3 +194,4 @@ export default function AdminCategoriesPage() {
     </div>
   );
 }
+

@@ -15,3 +15,4 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.mjs ./next.config.mjs
 EXPOSE 3005
 CMD ["npm", "run", "start"]
+

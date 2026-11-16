@@ -15,3 +15,4 @@ COPY --from=builder /app/dist ./dist
 RUN mkdir -p /app/uploads
 EXPOSE 4000
 CMD ["node", "dist/index.js"]
+

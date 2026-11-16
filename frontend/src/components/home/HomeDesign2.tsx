@@ -216,3 +216,4 @@ export function HomeDesign2({ products, categories }: HomeDesignProps) {
     </div>
   );
 }
+

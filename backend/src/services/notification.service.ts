@@ -24,7 +24,7 @@ export interface NotificationProvider {
  * Nodemailer/Resend (email), SSLWireless/Twilio (SMS), or Meta Cloud API (WhatsApp).
  */
 class QueueLogNotificationProvider implements NotificationProvider {
-  constructor(public readonly channel: NotificationChannel) {}
+  constructor(public readonly channel: NotificationChannel) { }
 
   async dispatch(
     _recipient: string,
@@ -65,3 +65,4 @@ export async function dispatchNotification(params: {
     console.error('[Notification Error]', err);
   }
 }
+
